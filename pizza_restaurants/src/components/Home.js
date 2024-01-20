@@ -23,6 +23,7 @@ function Home() {
   }
 
   return (
+    
     <section className="container">
       {restaurants.map((restaurant) => (
         <div key={restaurant.id} className="card">
@@ -33,6 +34,7 @@ function Home() {
           <button onClick={() => handleDelete(restaurant.id)}>Delete</button>
         </div>
       ))}
+      
     </section>
   );
 }
