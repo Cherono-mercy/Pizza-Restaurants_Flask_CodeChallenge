@@ -97,7 +97,7 @@ class RestaurantsId(Resource):
                 "error": "Restaurant not found"
             }), 404
 
-api.add_resource(RestaurantsId, 'restaurants/<int:id>')
+api.add_resource(RestaurantsId, '/restaurants/<int:id>')
 
 
 # GET/pizzas Route
@@ -117,7 +117,7 @@ class Pizzas(Resource):
             200
         )  
 
-api.add_resource(Pizzas, 'pizzas')
+api.add_resource(Pizzas, '/pizzas')
 
 # POST /restaurant_pizzas Route
 class RestaurantPizzas(Resource): 
