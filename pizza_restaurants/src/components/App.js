@@ -1,20 +1,21 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "./Home";
-import Navbar from "./Navbar";
+import { Routes, Route } from "react-router-dom";
+// import Header from "./Header";
 import Restaurant from "./Restaurant";
+import Home from "./Home";
+import PizzaForm from "./PizzaForm";
 
 function App() {
   return (
-    <Router>
-      <>
-        <Navbar />
+    <div>
+      {/* <Header /> */}
+      <main>
         <Routes>
-          <Route path="/restaurants/:id" element={<Restaurant />} />
           <Route path="/" element={<Home />} />
+          <Route path="/restaurant_pizzas/new" element={<PizzaForm />} />
+          <Route path="/restaurants/:id" element={<Restaurant />} />
         </Routes>
-      </>
-    </Router>
+      </main>
+    </div>
   );
 }
 
