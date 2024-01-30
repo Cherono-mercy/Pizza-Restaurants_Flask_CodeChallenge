@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response,jsonify
+from flask import Flask, request, make_response,jsonify, abort
 from flask_restful import Resource, Api
 from flask_migrate import Migrate
 
@@ -49,9 +49,14 @@ api.add_resource(Restaurants, '/restaurants')
 
 
 # GET/DELETE/restaurants/:id Route
+
+from flask import jsonify, make_response, abort
+from flask_restful import Resource
+from models import db, Restaurant, RestaurantPizza
+
 class RestaurantsId(Resource):
     def get(self, id): 
-        restaurant = Restaurant.query.filter(Restaurant.id == id).first()
+        restaurant = Restaurant.query.filter_by(id=id).first()
 
         if restaurant:
             restaurant_dict = {
@@ -61,7 +66,7 @@ class RestaurantsId(Resource):
                 "pizzas": []
             }
 
-            for restaurant_pizza in restaurant.restaurant_pizza:
+            for restaurant_pizza in restaurant.restaurant_pizzas:
                 pizza_dict = {
                     "id": restaurant_pizza.pizza.id,
                     "name": restaurant_pizza.pizza.name,
@@ -72,30 +77,28 @@ class RestaurantsId(Resource):
             return make_response(
                 jsonify(restaurant_dict),
                 200
-            ) 
+            )
         else:
             return make_response(
-                jsonify(
-                    {
-                     "error": "Restaurant not found"   
-                    }
-                ),
+                jsonify({"error": "Restaurant not found"}),
                 404
-            )  
-
+            )
 
     def delete(self, id):
-        restaurant = Restaurant.query.filter_by(id = id).first()
+        restaurant = Restaurant.query.filter_by(id=id).first()
 
         if restaurant:
+            # Delete associated RestaurantPizza instances
+            RestaurantPizza.query.filter_by(restaurant_id=id).delete()
+
+            # Delete the restaurant
             db.session.delete(restaurant)
             db.session.commit()
-            return jsonify({}), 204 # Status code 204 for successful deletion 
-        
+
+            return jsonify(message="Restaurant deleted successfully"), 204
         else:
-            return jsonify({
-                "error": "Restaurant not found"
-            }), 404
+            abort(404, description="Restaurant not found")
+
 
 api.add_resource(RestaurantsId, '/restaurants/<int:id>')
 
@@ -111,7 +114,7 @@ class Pizzas(Resource):
                 "name": pizza.name,
                 "ingredients": pizza.ingredients
             }
-            pizza.append(pizza_dict)
+            pizzas.append(pizza_dict)
         return make_response(
             jsonify(pizzas),
             200
