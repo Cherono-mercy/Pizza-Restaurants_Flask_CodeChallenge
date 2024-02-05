@@ -1,3 +1,4 @@
+// Home.js
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -10,20 +11,7 @@ function Home() {
       .then(setRestaurants);
   }, []);
 
-  function handleDelete(id) {
-    fetch(`/restaurants/${id}`, {
-      method: "DELETE",
-    }).then((r) => {
-      if (r.ok) {
-        setRestaurants((restaurants) =>
-          restaurants.filter((restaurant) => restaurant.id !== id)
-        );
-      }
-    });
-  }
-
   return (
-    
     <section className="container">
       {restaurants.map((restaurant) => (
         <div key={restaurant.id} className="card">
@@ -31,10 +19,8 @@ function Home() {
             <Link to={`/restaurants/${restaurant.id}`}>{restaurant.name}</Link>
           </h2>
           <p>Address: {restaurant.address}</p>
-          <button onClick={() => handleDelete(restaurant.id)}>Delete</button>
         </div>
       ))}
-      
     </section>
   );
 }
