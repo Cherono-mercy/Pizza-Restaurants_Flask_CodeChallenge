@@ -161,7 +161,9 @@ class RestaurantPizzas(Resource):
         except Exception as e:
             print(e)
             db.session.rollback()
-            return jsonify({"errors": ["validation errors"]}), 400               
+            return jsonify({"errors": ["validation errors"]}), 400
+
+api.add_resource(RestaurantPizzas, '/restaurant_pizzas')                       
 
 if __name__ == '__main__':
     app.run(port=5555)                   
